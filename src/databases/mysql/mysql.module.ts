@@ -2,18 +2,17 @@ import { InternalServerErrorException, Module, OnModuleInit } from '@nestjs/comm
 import { TypeOrmModule } from '@nestjs/typeorm';
 import entities from './entities';
 import { DataSource } from 'typeorm';
+import { ConfigsService } from '@configs';
 
 @Module({
   imports: [
-    TypeOrmModule.forRoot({
-      type: 'mysql',
-      host: 'localhost',
-      username: 'root',
-      password: '1234',
-      database: 'climb',
-      port: 3306,
-      entities,
-      synchronize: true,
+    TypeOrmModule.forRootAsync({
+      inject: [ConfigsService],
+      useFactory: (configsService: ConfigsService) => ({
+        ...configsService.mysql,
+        entities,
+        synchronize: true,
+      }),
     }),
   ],
 })
