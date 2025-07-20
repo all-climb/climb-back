@@ -1,0 +1,22 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+# Get the current branch name
+BRANCH_NAME=$(git branch --show-current)
+
+# Extract JIRA ticket number from branch name (e.g., SW-12-init -> SW-12)
+# This regex matches patterns like SW-123, SW-123-anything, etc.
+TICKET_PREFIX=$(echo "$BRANCH_NAME" | grep -o '^[A-Z]\+-[0-9]\+' | head -1)
+
+# If we found a ticket prefix and it's not already in the commit message
+if [ -n "$TICKET_PREFIX" ]; then
+    # Read the current commit message
+    COMMIT_MSG=$(cat "$1")
+    
+    # Check if the ticket prefix is already at the beginning of the commit message
+    if ! echo "$COMMIT_MSG" | grep -q "^$TICKET_PREFIX"; then
+        # Add the ticket prefix to the beginning of the commit message
+        echo "$TICKET_PREFIX $COMMIT_MSG" > "$1"
+        echo "Added ticket prefix '$TICKET_PREFIX' to commit message"
+    fi
+fi 
