@@ -15,6 +15,10 @@ export class ConfigsService {
     return config;
   }
 
+  get isDev() {
+    return this.config.get<string>('NODE_ENV') !== 'development';
+  }
+
   get mysql() {
     const config: DataSourceOptions = {
       type: 'mysql',
