@@ -22,7 +22,8 @@
     "paths": {
       "@configs": ["configs"],
       "@databases": ["databases"],
-      "@middlewares": ["middlewares"]
+      "@middlewares": ["middlewares"],
+      "@libs/*": ["libs/*"]
     }
   }
 }
